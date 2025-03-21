@@ -315,6 +315,10 @@ double-down-lore: "&7&o(Double the bet amount and stand after 1 more card)"
     }
 
     public  String getString(String path){
+        if (!getConfig().contains(path)) {
+            Bukkit.getLogger().info("[Blackjack] Could not find config path!: " + path);
+            return "";
+        }
         return ChatColor.translateAlternateColorCodes('&', getConfig().getString(path));
     }
     private boolean setupEconomy() {

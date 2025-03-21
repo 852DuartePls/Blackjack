@@ -141,7 +141,10 @@ public class BlackjackInventoryClickEvent implements Listener {
                         // Double the bet amount and show them the new inventory where
                         // only option is to stand after they gained a new card
                         // ensure that they only see the nether star if it is the first move
+                        Blackjack.withdraw(currentGame.getBetAmount(), currentGame.getPlayer());
+
                         currentGame.setBetAmount(currentGame.getBetAmount()*2);
+                        // Withdraw bet amount again
                         currentGame.getNextCard();
                         int score = currentGame.getScoreUnder21(currentGame.getPlayerCards());
                         if (score > 21) {

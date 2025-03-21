@@ -6,7 +6,7 @@
 
     <groupId>me.perotin</groupId>
     <artifactId>Blackjack</artifactId>
-    <version>1.7.6</version>
+    <version>1.7.7</version>
 
     <repositories>
         <repository>
@@ -62,7 +62,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.4.1</version>
                 <configuration>
-                    <outputDirectory>/Users/maxfuligni/Desktop/network/bungee_server2/plugins</outputDirectory> <!-- JAR output directory -->
+                    <outputDirectory>/Users/maxfuligni/Desktop/network/bungee_server1/plugins</outputDirectory> <!-- JAR output directory -->
                 </configuration>
             </plugin>
         </plugins>

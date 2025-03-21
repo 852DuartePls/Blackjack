@@ -83,6 +83,7 @@ public class BlackjackLeaveMidGameEvent implements Listener {
                     String name = plugin.getString("menu-title").replace("$number$", "" + game.getBetAmount());
 
 
+
                     currentGame = game;
                     session = plugin.getSessionFor(quitter.getUniqueId());
 
@@ -92,6 +93,7 @@ public class BlackjackLeaveMidGameEvent implements Listener {
         if(currentGame != null && session != null){
             session.endGame(currentGame, BlackjackGame.Ending.LOSE);
             player.addLoss();
+            BlackjackJoinEvent.quitterMidGame.put(quitter.getUniqueId(), currentGame.getBetAmount());
             session.endSession();
         }
     }

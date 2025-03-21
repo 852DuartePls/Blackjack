@@ -7,10 +7,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.UUID;
+
 /* Created by Perotin on 3/25/19 */
 public class BlackjackJoinEvent implements Listener {
 
     private Blackjack plugin;
+    public static Map<UUID, Double> quitterMidGame = new HashMap<>();
 
     public BlackjackJoinEvent(Blackjack blackjack) {
         this.plugin = blackjack;
@@ -22,5 +28,13 @@ public class BlackjackJoinEvent implements Listener {
         if(plugin.getPlayerFor(joiner) ==null){
             plugin.getPlayers().add(BlackjackPlayer.loadPlayer(joiner));
         }
+        // Do a check to see if they are rejoining after being mid-game to notify them
+        if (quitterMidGame.containsKey(joiner.getUniqueId())) {
+            joiner.sendMessage(plugin.getString("quitter-mid-game")
+                    .replace("$amount$", quitterMidGame.get(joiner.getUniqueId())+""));
+            quitterMidGame.remove(joiner.getUniqueId());
+
+        }
+
     }
 }

@@ -159,9 +159,7 @@ public class BlackjackGame {
             inventory.setItem(32, surrender.build());
         }
         if(plugin.isDoubleDownEnabled() && playerCards.size() == 2) {
-            if (Blackjack.getEconomy().getBalance(player) * 2 < betAmount && !plugin.isDoubleDownOverFlow()){
-
-            } else {
+            if (Blackjack.getEconomy().getBalance(player) >= betAmount  || plugin.isDoubleDownOverFlow()){
                 ItemBuilder doubleDown = new ItemBuilder(XMaterial.NETHER_STAR.parseItem());
                 doubleDown.name(Blackjack.getInstance().getString("double-down-item"));
                 doubleDown.lore(Blackjack.getInstance().getString("double-down-lore"));
