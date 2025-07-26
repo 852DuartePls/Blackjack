@@ -6,7 +6,11 @@
 
     <groupId>me.perotin</groupId>
     <artifactId>Blackjack</artifactId>
-    <version>1.7.7</version>
+    <version>1.7.8</version>
+    <name>Blackjack</name>
+    <organization>
+        <name>Perotin</name>
+    </organization>
 
     <repositories>
         <repository>
@@ -45,7 +49,12 @@
     </dependencies>
 
     <build>
-        <directory>/Users/maxfuligni/Desktop/network/bungee_server2/plugins</directory>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -60,10 +69,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.4.1</version>
-                <configuration>
-                    <outputDirectory>/Users/maxfuligni/Desktop/network/bungee_server1/plugins
-                    </outputDirectory>
-                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -72,6 +77,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.api-version>1.21</project.api-version>
     </properties>
 
 </project>

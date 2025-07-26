@@ -1,9 +1,9 @@
-name: Blackjack
+name: ${project.name}
 main: me.perotin.blackjack.Blackjack
-version: 1.7.7
-author: Perotin
+version: ${project.version}
+author: ${project.organization.name}
 depends: [Vault]
-api-version: 1.13
+api-version: '${project.api-version}'
 commands:
    blackjack:
       usage: /blackjack <amount>
