@@ -46,47 +46,42 @@ public class BlackjackCommand implements BasicCommand {
                         player.sendMessage(mini.deserialize("<green><b>»</b> Usa: <gold>/bj <cantidad></gold> para empezar a jugar o <gold>/bj <jugador></gold> para ver estadísticas de un jugador."));
                     }
                 } catch (SQLException e) {
-                    player.sendMessage(mini.deserialize("<red> Ocurrió un error al recuperar tu sesión."));
+                    player.sendMessage(mini.deserialize("<red><b>»</b> Ocurrió un error al recuperar tu sesión."));
                     BlackjackLite.logger().error("Error loading session for {}: {}", player.getName(), e.getMessage());
                 }
                 return;
             }
 
-            if (args.length == 1 && isNumeric(args[0])) {
+            if (args.length == 1) {
                 int bet = parseBetAmount(args[0]);
 
-                if (bet == -1) {
-                    player.sendMessage(mini.deserialize("<yellow><b>»</b> Número inválido: " + args[0]));
-                    return;
-                }
-
-                if (bet < 100) {
-                    player.sendMessage(mini.deserialize("<yellow><b>»</b> La apuesta mínima es de 100$."));
-                    return;
-                }
-
-                if (!BlackjackLite.instance().hasEnough(player, bet)) {
-                    player.sendMessage(mini.deserialize("<red><b>»</b> No tienes suficiente dinero para hacer esta apuesta."));
-                    return;
-                }
-
-                try {
-                    var session = BlackjackLite.instance().getSessionDB().load(player.getUniqueId());
-
-                    if (session.isPresent()) {
-                        player.sendMessage(mini.deserialize("<yellow><b>»</b> Has retomado tu partida anterior."));
-                        player.openInventory(menus.openGameMenu(session.get().getBet(), session.get()));
-                    } else {
-                        player.openInventory(menus.openInitialMenu(bet));
+                if (bet >= 0) {
+                    if (bet < 100) {
+                        player.sendMessage(mini.deserialize("<yellow><b>»</b> La apuesta mínima es de 100$."));
+                        return;
                     }
-                } catch (SQLException e) {
-                    player.sendMessage(mini.deserialize("<red><b>»</b> Ocurrió un error al verificar tu sesión anterior."));
-                    BlackjackLite.instance().getLogger().warning("An error occurred while checking previous session: " + e.getMessage());
-                }
-                return;
-            }
+                    if (!BlackjackLite.instance().hasEnough(player, bet)) {
+                        player.sendMessage(mini.deserialize("<red><b>»</b> No tienes suficiente dinero para hacer esta apuesta."));
+                        return;
+                    }
 
-            if (args.length == 1) {
+                    try {
+                        Optional<BlackjackGame> session = BlackjackLite.instance().getSessionDB().load(uuid);
+                        if (session.isPresent()) {
+                            BlackjackGame game = session.get();
+                            BlackjackLite.instance().getBlackjackListener().getActiveGames().put(uuid, game);
+                            player.sendMessage(mini.deserialize("<yellow><b>»</b> Has retomado tu partida anterior."));
+                            player.openInventory(menus.openGameMenu(game.getBet(), game));
+                        } else {
+                            player.openInventory(menus.openInitialMenu(bet));
+                        }
+                    } catch (SQLException e) {
+                        player.sendMessage(mini.deserialize("<red><b>»</b> Ocurrió un error al verificar tu sesión anterior."));
+                        BlackjackLite.instance().getLogger().warning("Error checking session: " + e.getMessage());
+                    }
+                    return;
+                }
+
                 showPlayerStats(player, args[0]);
                 return;
             }
@@ -94,16 +89,15 @@ public class BlackjackCommand implements BasicCommand {
             player.sendMessage(mini.deserialize("<green><b>»</b> Usa: <gold>/bj <cantidad></gold> para empezar a jugar o <gold>/bj <jugador></gold> para ver estadísticas de un jugador."));
 
         } else if (stack.getSender() instanceof ConsoleCommandSender consoleSender) {
-            if (args.length == 1 && isNumeric(args[0])) {
-                consoleSender.sendMessage(mini.deserialize("<yellow><b>»</b> Este comando solo puede ser usado por jugadores. Usa: <gold>/bj <jugador></gold> para ver estadísticas."));
-                return;
-            }
-
             if (args.length == 1) {
+                int bet = parseBetAmount(args[0]);
+                if (bet >= 0) {
+                    consoleSender.sendMessage(mini.deserialize("<yellow><b>»</b> Este comando solo puede ser usado por jugadores. Usa: <gold>/bj <jugador></gold> para ver estadísticas."));
+                    return;
+                }
                 showPlayerStats(consoleSender, args[0]);
                 return;
             }
-
             consoleSender.sendMessage(mini.deserialize("<yellow><b>»</b> Uso inválido. Solo se pueden consultar estadísticas cuando se usa la consola. Usa: <gold>/bj <jugador></gold>."));
         }
     }
@@ -151,64 +145,39 @@ public class BlackjackCommand implements BasicCommand {
             var mini = BlackjackLite.instance().mini();
 
             String message = """
-            
-            <green>─── ･ ｡ﾟ☆: *.☽ .* :☆ﾟ. ───</green>
-            <gold>Estadísticas de <white><player></white>:
-             <gray>- Partidas jugadas:</gray> <white><games></white>
-             <gray>- Victorias:</gray> <green><wins></green>
-             <gray>- Derrotas:</gray> <red><losses></red>
-             <gray>- Ganancias totales:</gray> <green><winnings>$</green>
-             <gray>- Pérdidas totales:</gray> <red><lossesAmount>$</red>
-            <green>─── ･ ｡ﾟ☆: *.☽ .* :☆ﾟ. ───</green>
-            """.replace("<player>", stats.playerName())
+                    
+                    <green>─── ･ ｡ﾟ☆: *.☽ .* :☆ﾟ. ───</green>
+                    <gold>Estadísticas de <white><player></white>:
+                     <gray>- Partidas jugadas:</gray> <white><games></white>
+                     <gray>- Victorias:</gray> <green><wins></green>
+                     <gray>- Derrotas:</gray> <red><losses></red>
+                     <gray>- Ganancias totales:</gray> <green><winnings>$</green>
+                     <gray>- Pérdidas totales:</gray> <red><lossesAmount>$</red>
+                    <green>─── ･ ｡ﾟ☆: *.☽ .* :☆ﾟ. ───</green>
+                    """.replace("<player>", stats.playerName())
                     .replace("<games>", String.valueOf(stats.gamesPlayed()))
                     .replace("<wins>", String.valueOf(stats.wins()))
                     .replace("<losses>", String.valueOf(stats.losses()))
                     .replace("<winnings>", String.valueOf(stats.totalWinnings()))
                     .replace("<lossesAmount>", String.valueOf(stats.totalLosses()));
 
-            // Send message to sender (either Player or Console)
             sender.sendMessage(mini.deserialize(message));
         } catch (SQLException e) {
             sender.sendMessage(mini.deserialize("<dark_red><b>»</b> Error al recuperar estadísticas."));
         }
     }
 
-    // << -- Helpers -- >> //
+    // << -- Helper -- >> //
 
-    private boolean isNumeric(String str) {
-        try {
-            Integer.parseInt(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    // Check for "k" or "mil" suffixes and multiply the value by 1000
-    // mil = thousand in Spanish
     private int parseBetAmount(@NotNull String input) {
-        if (input.toLowerCase().endsWith("k")) {
-            String numberPart = input.substring(0, input.length() - 1);
-            try {
-                int value = Integer.parseInt(numberPart);
-                return value * 1000;
-            } catch (NumberFormatException e) {
-                return -1;
-            }
-        }
-
-        if (input.toLowerCase().endsWith("mil")) {
-            String numberPart = input.substring(0, input.length() - 3);
-            try {
-                int value = Integer.parseInt(numberPart);
-                return value * 1000;
-            } catch (NumberFormatException e) {
-                return -1;
-            }
-        }
-
+        input = input.toLowerCase().trim();
         try {
+            if (input.endsWith("k")) {
+                return Integer.parseInt(input.substring(0, input.length() - 1)) * 1000;
+            }
+            if (input.endsWith("mil")) {
+                return Integer.parseInt(input.substring(0, input.length() - 3)) * 1000;
+            }
             return Integer.parseInt(input);
         } catch (NumberFormatException e) {
             return -1;
