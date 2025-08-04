@@ -3,6 +3,7 @@ package me.duart.blackjackLite.db;
 import me.duart.blackjackLite.BlackjackLite;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.sql.*;
@@ -84,21 +85,21 @@ public class PlayerStatsDB {
         }
     }
 
-    public PlayerStats getStats(UUID uuid) throws SQLException {
-        ensureExists(uuid);
+    @Nullable
+    public PlayerStats getStats(@NotNull UUID uuid) throws SQLException {
         String query = "SELECT * FROM player_stats WHERE uuid = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, uuid.toString());
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
                 return new PlayerStats(
                         uuid,
-                        resultSet.getString("player_name"),
-                        resultSet.getInt("games_played"),
-                        resultSet.getInt("wins"),
-                        resultSet.getInt("losses"),
-                        resultSet.getInt("total_winnings"),
-                        resultSet.getInt("total_losses")
+                        rs.getString("player_name"),
+                        rs.getInt("games_played"),
+                        rs.getInt("wins"),
+                        rs.getInt("losses"),
+                        rs.getInt("total_winnings"),
+                        rs.getInt("total_losses")
                 );
             }
         }
