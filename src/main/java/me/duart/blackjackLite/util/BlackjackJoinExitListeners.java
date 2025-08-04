@@ -44,7 +44,7 @@ public final class BlackjackJoinExitListeners implements Listener {
         try {
             if (sessionDB.hasSession(uuid)) {
                 event.getPlayer().sendMessage(BlackjackLite.instance().mini()
-                        .deserialize("<red>(!)</red> <green>Tu anterior partida ha terminado bruscamente<newline>" +
+                        .deserialize("<red><b>(!)</b></red> <green>Tu anterior partida ha terminado bruscamente<newline>" +
                                 "<green>Escribe el comando <gold>/blackjack (/bj)</gold> para restaurarlo.")
                 );
             }
