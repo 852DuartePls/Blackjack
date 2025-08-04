@@ -56,7 +56,7 @@ public class BlackjackMenus {
         inv.setItem(18, createItem(Material.BARRIER, "<red>Reiniciar apuesta", "reset_bet"));
         inv.setItem(26, createItem(Material.EMERALD_BLOCK, "<green>Iniciar Juego", "start_game"));
         inv.setItem(44, createItem(Material.BUCKET, "<gray>Cerrar", "close"));
-        inv.setItem(0, createItemWithLore(Material.BOOK, "<red>¿Cómo jugar?", "how_to_play", List.of(howToPlay)));
+        inv.setItem(0, createItemWithLore(Material.BOOK, "<!i><red>===[ TUTORIAL ]===", "how_to_play", List.of(howToPlay)));
 
         return inv;
     }
@@ -279,24 +279,22 @@ public class BlackjackMenus {
     }
 
     public static final String[] howToPlay = {
-            "<white>✦ . 　⁺ 　 . 　⁺ 　 . ✦ . 　⁺ 　 . 　⁺ 　 . ✦",
             "",
-            "<yellow>Objetivo:</yellow> Tener una mano mayor que la del crupier, pero",
-            "sin tener cartas mayores que 21.",
+            "<!i><yellow>Objetivo:</yellow> Tener una mano mayor que la del crupier, pero",
+            "<!i>sin tener cartas mayores que 21.",
             "",
-            "<gold>Cartas:</gold> 2-10 valen su número, J/Q/K valen 10,",
-            "As vale 1 o 11 dependiendo si supera 21 o no",
-            "sumando las demas cartas.",
+            "<!i><gold>Cartas:</gold> 2-10 valen su número, J/Q/K valen 10,",
+            "<!i>As vale 1 o 11 dependiendo si supera 21 o no",
+            "<!i>sumando las demas cartas.",
             "",
-            "<green>¿Cómo jugar?</green>",
-            "<white>1. Apuesta: <yellow>/blackjack <cantidad></white>",
-            "<white>2. Recibes 2 cartas. El crupier también.</white>",
-            "<white>3. Elige: <red>Hit</red> (carta), <yellow>Stand</yellow> (plantarte), <gold>Double</gold> (doblar).</white>",
-            "<white>4. El crupier juega y se compara la mano.</white>",
+            "<!i><green>¿Cómo jugar?</green>",
+            "<!i><white>1. Apuesta: <yellow>/blackjack <cantidad></white>",
+            "<!i><white>2. Recibes 2 cartas. El crupier también.</white>",
+            "<!i><white>3. Elige: <red>Hit</red> (pedir), <yellow>Stand</yellow> (plantarte), <gold>Double</gold> (doblar).</white>",
+            "<!i><white>4. El crupier juega y se compara la mano.</white>",
             "",
-            "<gold>¿Ganas?</gold> Si superas al crupier sin pasarte de 21.",
-            "<red>¡Buena suerte!</red>",
+            "<!i><gold>¿Ganas?</gold> Si superas al crupier sin pasarte de 21.",
             "",
-            "<white>✦ . 　⁺ 　 . 　⁺ 　 . ✦ . 　⁺ 　 . 　⁺ 　 . ✦"
+            "<!i><red>¡Buena suerte!</red>",
     };
 }

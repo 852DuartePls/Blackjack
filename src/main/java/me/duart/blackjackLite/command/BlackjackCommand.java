@@ -146,14 +146,14 @@ public class BlackjackCommand implements BasicCommand {
 
             String message = """
                     
-                    <green>─── ･ ｡ﾟ☆: *.☽ .* :☆ﾟ. ───</green>
+                    <green>  ─── ･ ｡ﾟ☆: *.☽ .* :☆ﾟ. ───</green>
                     <gold>Estadísticas de <white><player></white>:
                      <gray>- Partidas jugadas:</gray> <white><games></white>
                      <gray>- Victorias:</gray> <green><wins></green>
                      <gray>- Derrotas:</gray> <red><losses></red>
                      <gray>- Ganancias totales:</gray> <green><winnings>$</green>
                      <gray>- Pérdidas totales:</gray> <red><lossesAmount>$</red>
-                    <green>─── ･ ｡ﾟ☆: *.☽ .* :☆ﾟ. ───</green>
+                    <green>  ─── ･ ｡ﾟ☆: *.☽ .* :☆ﾟ. ───</green>
                     """.replace("<player>", stats.playerName())
                     .replace("<games>", String.valueOf(stats.gamesPlayed()))
                     .replace("<wins>", String.valueOf(stats.wins()))
