@@ -194,7 +194,7 @@ public class BlackjackMenus {
         inv.setItem(22, createItem(Material.GOLD_NUGGET, "<yellow>Apuesta Final: <green>" + bet, "final_bet"));
         inv.setItem(4, winningsItem);
         inv.setItem(36, createItem(Material.EMERALD_BLOCK, "<green>Jugar Otra Vez", "play_again"));
-        inv.setItem(44, createItem(Material.BARRIER, "<red>Cerrar", "close"));
+        inv.setItem(44, createItem(Material.BUCKET, "<red>Cerrar", "close"));
         inv.setItem(19, createItem(Material.LIME_WOOL, "+10", "plus_10"));
         inv.setItem(20, createItem(Material.LIME_WOOL, "+100", "plus_100"));
         inv.setItem(21, createItem(Material.LIME_WOOL, "+1 000", "plus_1000"));
