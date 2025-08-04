@@ -206,12 +206,7 @@ public class BlackjackMenus {
         List<BlackjackGame.Card> dealerCards = game.getDealerHand();
         int[] dealerCardSlots = {13, 12, 14, 11, 15, 10, 16};
         for (int i = 0; i < dealerCards.size() && i < dealerCardSlots.length; i++) {
-            int slot = dealerCardSlots[i];
-            if (i == 1 && dealerCards.size() == 2) {
-                inv.setItem(slot, createItem(Material.MAP, "<red>Carta oculta", "hidden_card"));
-            } else {
-                inv.setItem(slot, createCardItem(dealerCards.get(i)));
-            }
+            inv.setItem(dealerCardSlots[i], createCardItem(dealerCards.get(i)));
         }
 
         /* ---- PLAYER CARDS (row 5 → max 6 cards) ---- */
