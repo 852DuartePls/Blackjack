@@ -48,14 +48,4 @@ tasks {
             expand(properties)
         }
     }
-    runServer {
-        minecraftVersion("1.21.8")
-        serverJar(file("/run/purpur.jar"))
-        downloadPlugins {
-            github("MilkBowl", "Vault", "1.7.3", "Vault.jar")
-            url("https://download.luckperms.net/1595/bukkit/loader/LuckPerms-Bukkit-5.5.10.jar")
-            url("https://ci.ender.zone/job/EssentialsX/lastSuccessfulBuild/artifact/jars/EssentialsX-2.21.2-dev+33-ff7c952.jar")
-            modrinth("lpc-chat", "3.6.9")
-        }
-    }
 }
