@@ -89,7 +89,7 @@ public class BlackjackMenus {
         }
         inv.setItem(9, createItem(Material.OAK_SIGN, "<gold>Total dealer: <white>" + totalText, "dealer_total"));
 
-        inv.setItem(35, createItem(Material.GOLD_NUGGET, "<yellow>Apuesta: " + bet, "bet"));
+        inv.setItem(35, createItem(Material.GOLD_NUGGET, "<yellow>Apuesta: <green>" + bet, "bet"));
 
         inv.setItem(20, createItem(Material.GREEN_WOOL, "<green>Pedir Carta", "hit"));
         inv.setItem(22, createItem(Material.RED_WOOL, "<red>Plantarse", "stand"));
@@ -191,7 +191,7 @@ public class BlackjackMenus {
         inv.setItem(27, createItem(Material.OAK_SIGN, "<gold>Tu total: <white>" + game.getPlayerTotal(), "player_total"));
         inv.setItem(9, createItem(Material.OAK_SIGN, "<gold>Total dealer: <white>" + game.getDealerTotal(), "dealer_total"));
 
-        inv.setItem(22, createItem(Material.GOLD_NUGGET, "<yellow>Apuesta Final: " + bet, "final_bet"));
+        inv.setItem(22, createItem(Material.GOLD_NUGGET, "<yellow>Apuesta Final: <green>" + bet, "final_bet"));
         inv.setItem(4, winningsItem);
         inv.setItem(36, createItem(Material.EMERALD_BLOCK, "<green>Jugar Otra Vez", "play_again"));
         inv.setItem(44, createItem(Material.BARRIER, "<red>Cerrar", "close"));
