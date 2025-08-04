@@ -5,7 +5,7 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import me.duart.blackjackLite.BlackjackLite;
 import me.duart.blackjackLite.gui.BlackjackMenus;
 import me.duart.blackjackLite.util.BlackjackGame;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -23,6 +23,7 @@ import java.util.UUID;
 public class BlackjackCommand implements BasicCommand {
 
     private final BlackjackMenus menus;
+    private final MiniMessage mini = BlackjackLite.instance().mini();
 
     public BlackjackCommand(@NotNull BlackjackLite plugin) {
         this.menus = new BlackjackMenus(plugin);
@@ -39,13 +40,13 @@ public class BlackjackCommand implements BasicCommand {
                     if (session.isPresent()) {
                         BlackjackGame game = session.get();
                         BlackjackLite.instance().getBlackjackListener().getActiveGames().put(uuid, game);
-                        player.sendMessage(Component.text("Has retomado tu partida anterior."));
+                        player.sendMessage(mini.deserialize("<green><b>»</b> Has retomado tu partida anterior.</green>"));
                         player.openInventory(menus.openGameMenu(game.getBet(), game));
                     } else {
-                        player.sendMessage(Component.text("Usa: /bj <cantidad> o /bj <jugador> para ver estadísticas."));
+                        player.sendMessage(mini.deserialize("<green><b>»</b> Usa: <gold>/bj <cantidad></gold> para empezar a jugar o <gold>/bj <jugador></gold> para ver estadísticas de un jugador."));
                     }
                 } catch (SQLException e) {
-                    player.sendMessage(Component.text("Ocurrió un error al recuperar tu sesión."));
+                    player.sendMessage(mini.deserialize("<red> Ocurrió un error al recuperar tu sesión."));
                     BlackjackLite.logger().error("Error loading session for {}: {}", player.getName(), e.getMessage());
                 }
                 return;
@@ -55,17 +56,17 @@ public class BlackjackCommand implements BasicCommand {
                 int bet = parseBetAmount(args[0]);
 
                 if (bet == -1) {
-                    player.sendMessage(Component.text("Número inválido: " + args[0]));
+                    player.sendMessage(mini.deserialize("<yellow><b>»</b> Número inválido: " + args[0]));
                     return;
                 }
 
                 if (bet < 100) {
-                    player.sendMessage(Component.text("La apuesta mínima es de 100$."));
+                    player.sendMessage(mini.deserialize("<yellow><b>»</b> La apuesta mínima es de 100$."));
                     return;
                 }
 
                 if (!BlackjackLite.instance().hasEnough(player, bet)) {
-                    player.sendMessage(Component.text("No tienes suficiente dinero para hacer esta apuesta."));
+                    player.sendMessage(mini.deserialize("<red><b>»</b> No tienes suficiente dinero para hacer esta apuesta."));
                     return;
                 }
 
@@ -73,13 +74,13 @@ public class BlackjackCommand implements BasicCommand {
                     var session = BlackjackLite.instance().getSessionDB().load(player.getUniqueId());
 
                     if (session.isPresent()) {
-                        player.sendMessage(Component.text("Has retomado tu partida anterior."));
+                        player.sendMessage(mini.deserialize("<yellow><b>»</b> Has retomado tu partida anterior."));
                         player.openInventory(menus.openGameMenu(session.get().getBet(), session.get()));
                     } else {
                         player.openInventory(menus.openInitialMenu(bet));
                     }
                 } catch (SQLException e) {
-                    player.sendMessage(Component.text("Ocurrió un error al verificar tu sesión anterior."));
+                    player.sendMessage(mini.deserialize("<red><b>»</b> Ocurrió un error al verificar tu sesión anterior."));
                     BlackjackLite.instance().getLogger().warning("An error occurred while checking previous session: " + e.getMessage());
                 }
                 return;
@@ -90,11 +91,11 @@ public class BlackjackCommand implements BasicCommand {
                 return;
             }
 
-            player.sendMessage(Component.text("Usa: /bj <cantidad> o /bj <jugador> para ver estadísticas."));
+            player.sendMessage(mini.deserialize("<green><b>»</b> Usa: <gold>/bj <cantidad></gold> para empezar a jugar o <gold>/bj <jugador></gold> para ver estadísticas de un jugador."));
 
         } else if (stack.getSender() instanceof ConsoleCommandSender consoleSender) {
             if (args.length == 1 && isNumeric(args[0])) {
-                consoleSender.sendMessage(Component.text("Este comando solo puede ser usado por jugadores. Usa: /bj <jugador> para ver estadísticas."));
+                consoleSender.sendMessage(mini.deserialize("<yellow><b>»</b> Este comando solo puede ser usado por jugadores. Usa: <gold>/bj <jugador></gold> para ver estadísticas."));
                 return;
             }
 
@@ -103,7 +104,7 @@ public class BlackjackCommand implements BasicCommand {
                 return;
             }
 
-            consoleSender.sendMessage(Component.text("Uso inválido. Solo se pueden consultar estadísticas desde la consola. Usa: /bj <jugador>"));
+            consoleSender.sendMessage(mini.deserialize("<yellow><b>»</b> Uso inválido. Solo se pueden consultar estadísticas cuando se usa la consola. Usa: <gold>/bj <jugador></gold>."));
         }
     }
 
@@ -143,7 +144,7 @@ public class BlackjackCommand implements BasicCommand {
         try {
             var stats = BlackjackLite.instance().getPlayerStatsDB().getStats(targetUUID);
             if (stats == null) {
-                sender.sendMessage(Component.text("No se encontraron estadísticas para " + targetName));
+                sender.sendMessage(mini.deserialize("<red><b>»</b> No se encontraron estadísticas para <yellow>" + targetName));
                 return;
             }
 
@@ -169,7 +170,7 @@ public class BlackjackCommand implements BasicCommand {
             // Send message to sender (either Player or Console)
             sender.sendMessage(mini.deserialize(message));
         } catch (SQLException e) {
-            sender.sendMessage(Component.text("Error al recuperar estadísticas."));
+            sender.sendMessage(mini.deserialize("<dark_red><b>»</b> Error al recuperar estadísticas."));
         }
     }
 
