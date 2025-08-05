@@ -3,6 +3,7 @@ package me.duart.blackjackLite.command;
 import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import me.duart.blackjackLite.BlackjackLite;
+import me.duart.blackjackLite.gui.BlackjackInventoryHolder;
 import me.duart.blackjackLite.gui.BlackjackMenus;
 import me.duart.blackjackLite.util.BlackjackGame;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -10,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +43,7 @@ public class BlackjackCommand implements BasicCommand {
                         BlackjackGame game = session.get();
                         BlackjackLite.instance().getBlackjackListener().getActiveGames().put(uuid, game);
                         player.sendMessage(mini.deserialize("<green><b>»</b> Has retomado tu partida anterior.</green>"));
-                        player.openInventory(menus.openGameMenu(game.getBet(), game));
+                        player.openInventory(menus.openGameMenu(getCurrentBet(player), game));
                     } else {
                         player.sendMessage(mini.deserialize("<green><b>»</b> Usa: <gold>/bj <cantidad></gold> para empezar a jugar o <gold>/bj <jugador></gold> para ver estadísticas de un jugador."));
                     }
@@ -71,7 +73,7 @@ public class BlackjackCommand implements BasicCommand {
                             BlackjackGame game = session.get();
                             BlackjackLite.instance().getBlackjackListener().getActiveGames().put(uuid, game);
                             player.sendMessage(mini.deserialize("<yellow><b>»</b> Has retomado tu partida anterior."));
-                            player.openInventory(menus.openGameMenu(game.getBet(), game));
+                            player.openInventory(menus.openGameMenu(getCurrentBet(player), game));
                         } else {
                             player.openInventory(menus.openInitialMenu(bet));
                         }
@@ -182,5 +184,12 @@ public class BlackjackCommand implements BasicCommand {
         } catch (NumberFormatException e) {
             return -1;
         }
+    }
+
+    private int getCurrentBet(@NotNull Player player) {
+        Inventory inv = player.getOpenInventory().getTopInventory();
+        if (!(inv.getHolder() instanceof BlackjackInventoryHolder holder))
+            return 100; // fallback
+        return holder.getBet();
     }
 }

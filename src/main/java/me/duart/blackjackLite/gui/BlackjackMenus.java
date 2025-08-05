@@ -202,14 +202,14 @@ public class BlackjackMenus {
         inv.setItem(24, createItem(Material.RED_WOOL, "-100", "minus_100"));
         inv.setItem(25, createItem(Material.RED_WOOL, "-1 000", "minus_1000"));
 
-        /* ---- DEALER CARDS (row 2,  → max 5 cards) ---- */
+        /* ---- DEALER CARDS (row 2, slots 10-16 → max 7 cards) ---- */
         List<BlackjackGame.Card> dealerCards = game.getDealerHand();
         int[] dealerCardSlots = {13, 12, 14, 11, 15, 10, 16};
         for (int i = 0; i < dealerCards.size() && i < dealerCardSlots.length; i++) {
             inv.setItem(dealerCardSlots[i], createCardItem(dealerCards.get(i)));
         }
 
-        /* ---- PLAYER CARDS (row 5 → max 6 cards) ---- */
+        /* ---- PLAYER CARDS (row 5, slots 28-34 → max 7 cards) ---- */
         List<BlackjackGame.Card> playerCards = game.getPlayerHand();
         int[] playerCardSlots = {31, 30, 32, 29, 33, 28, 34};
         for (int i = 0; i < playerCards.size() && i < playerCardSlots.length; i++) {

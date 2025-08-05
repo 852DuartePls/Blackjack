@@ -1,19 +1,16 @@
 package me.duart.blackjackLite.db;
 
-import com.google.gson.Gson;
 import me.duart.blackjackLite.BlackjackLite;
 import me.duart.blackjackLite.util.BlackjackGame;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.sql.*;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 public final class SessionDB implements AutoCloseable {
 
-    private static final Gson GSON = new Gson();
     private final Connection connection;
 
     public SessionDB(@NotNull BlackjackLite plugin) throws SQLException {
@@ -80,9 +77,7 @@ public final class SessionDB implements AutoCloseable {
     }
 
     private @NotNull BlackjackGame deserialize(@NotNull String json) {
-        Map<?,?> map = GSON.fromJson(json, Map.class);
-        int bet = ((Number) map.get("bet")).intValue();
-        return BlackjackGame.deserialize(json, bet);
+        return BlackjackGame.deserialize(json);
     }
 
     public boolean hasSession(@NotNull UUID uuid) throws SQLException {

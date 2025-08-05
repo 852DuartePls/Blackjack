@@ -90,16 +90,16 @@ public class PlayerStatsDB {
         String query = "SELECT * FROM player_stats WHERE uuid = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, uuid.toString());
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
                 return new PlayerStats(
                         uuid,
-                        rs.getString("player_name"),
-                        rs.getInt("games_played"),
-                        rs.getInt("wins"),
-                        rs.getInt("losses"),
-                        rs.getInt("total_winnings"),
-                        rs.getInt("total_losses")
+                        resultSet.getString("player_name"),
+                        resultSet.getInt("games_played"),
+                        resultSet.getInt("wins"),
+                        resultSet.getInt("losses"),
+                        resultSet.getInt("total_winnings"),
+                        resultSet.getInt("total_losses")
                 );
             }
         }

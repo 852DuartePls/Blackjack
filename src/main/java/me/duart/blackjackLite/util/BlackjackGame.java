@@ -13,15 +13,13 @@ import java.util.Map;
 public class BlackjackGame {
 
     private List<Card> deck;
-    private int bet;
     private static final Gson GSON = new Gson();
     private List<Card> playerHand = new ArrayList<>();
     private List<Card> dealerHand = new ArrayList<>();
 
-    public BlackjackGame(int bet) {
+    public BlackjackGame() {
         this.deck = createDeck();
         shuffleDeck();
-        this.bet = bet;
     }
 
     private @NotNull List<Card> createDeck() {
@@ -47,6 +45,13 @@ public class BlackjackGame {
         Collections.shuffle(deck);
     }
 
+    private void reshuffleIfNeeded() {
+        if (deck.isEmpty()) {
+            deck = createDeck();
+            shuffleDeck();
+        }
+    }
+
     public void startGame() {
         playerHand.clear();
         dealerHand.clear();
@@ -56,10 +61,9 @@ public class BlackjackGame {
         drawCard(dealerHand);
     }
 
-    public void drawCard(List<Card> hand) {
-        if (!deck.isEmpty()) {
-            hand.add(deck.removeFirst());
-        }
+    public void drawCard(@NotNull List<Card> hand) {
+        reshuffleIfNeeded();
+        hand.add(deck.removeFirst());
     }
 
     private int calculateTotal(@NotNull List<Card> hand) {
@@ -122,14 +126,6 @@ public class BlackjackGame {
         return calculateTotal(hand) > 21;
     }
 
-    public int getBet() {
-        return bet;
-    }
-
-    public void setBet(int bet) {
-        this.bet = Math.max(bet, 100);
-    }
-
     public enum Result {WIN, LOSE, DRAW}
 
     public Result determineResult() {
@@ -157,19 +153,23 @@ public class BlackjackGame {
     public String serialize() {
         return GSON.toJson(Map.of(
                 "deck", deck,
-                "bet", bet,
+                "originalBet", getCurrentBetFromOutside(),
                 "playerHand", playerHand,
                 "dealerHand", dealerHand
         ));
     }
 
-    public static @NotNull BlackjackGame deserialize(String json, int bet) {
+    public static @NotNull BlackjackGame deserialize(String json) {
         Map<?,?> map = GSON.fromJson(json, Map.class);
-        BlackjackGame game = new BlackjackGame(bet);
+        BlackjackGame game = new BlackjackGame();
         game.deck = GSON.fromJson(GSON.toJson(map.get("deck")), new TypeToken<List<Card>>(){}.getType());
         game.playerHand = GSON.fromJson(GSON.toJson(map.get("playerHand")), new TypeToken<List<Card>>(){}.getType());
         game.dealerHand = GSON.fromJson(GSON.toJson(map.get("dealerHand")), new TypeToken<List<Card>>(){}.getType());
         return game;
+    }
+
+    private static int getCurrentBetFromOutside() {
+        return 0;
     }
 
     public record Card(String name, String suit, int value) {

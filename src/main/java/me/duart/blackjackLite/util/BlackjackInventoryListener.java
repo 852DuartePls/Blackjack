@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static me.duart.blackjackLite.gui.BlackjackMenus.getItemID;
 import static me.duart.blackjackLite.gui.BlackjackMenus.playSound;
@@ -30,7 +31,7 @@ public class BlackjackInventoryListener implements Listener {
     private final BlackjackMenus menus;
     private final SessionDB sessionDB;
 
-    public final Map<UUID, BlackjackGame> activeGames = new HashMap<>();
+    public final Map<UUID, BlackjackGame> activeGames = new ConcurrentHashMap<>();
     private final Map<UUID, Integer> totalEarnings = new HashMap<>();
 
     public BlackjackInventoryListener(BlackjackLite plugin, BlackjackMenus menus, SessionDB sessionDB) {
@@ -76,7 +77,7 @@ public class BlackjackInventoryListener implements Listener {
 
         switch (holder.getMenuTypeid()) {
             case "initial_menu" -> handleBettingActions(event, holder, uuid);
-            case "game_menu" -> handleGameActions(event, uuid);
+            case "game_menu" -> handleGameActions(event,  holder,  uuid);
             case "result_menu" -> handleResultActions(event, uuid);
         }
     }
@@ -129,7 +130,7 @@ public class BlackjackInventoryListener implements Listener {
                     return;
                 }
                 BlackjackLite.withdraw(player, currentBet);
-                BlackjackGame game = new BlackjackGame(currentBet);
+                BlackjackGame game = new BlackjackGame();
                 game.startGame();
                 playSound(player, Sound.ENTITY_ENDER_DRAGON_FLAP, 0.3f, 1.0f);
                 activeGames.put(playerUUID, game);
@@ -148,7 +149,7 @@ public class BlackjackInventoryListener implements Listener {
         updateBetUI(event.getInventory(), holder.getBet());
     }
 
-    private void handleGameActions(@NotNull InventoryClickEvent event, UUID playerUUID) {
+    private void handleGameActions(@NotNull InventoryClickEvent event, BlackjackInventoryHolder holder, UUID playerUUID) {
         Player player = (Player) event.getWhoClicked();
         ItemStack clickedItem = event.getCurrentItem();
         if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
@@ -159,13 +160,13 @@ public class BlackjackInventoryListener implements Listener {
         BlackjackGame game = activeGames.get(playerUUID);
         if (game == null) return;
 
-        int bet = game.getBet();
+        int bet = holder.getBet();
 
         switch (id) {
             case "hit" -> {
                 game.hitPlayer();
                 if (game.isBust(game.getPlayerHand())) {
-                    finishRound(playerUUID, game, BlackjackGame.Result.LOSE);
+                    finishRound(playerUUID, game, BlackjackGame.Result.LOSE, holder);
                     return;
                 }
                 playSound(player, Sound.ENTITY_WARDEN_HEARTBEAT, 0.25f, 1.0f);
@@ -174,7 +175,7 @@ public class BlackjackInventoryListener implements Listener {
 
             case "stand" -> {
                 game.dealerPlay();
-                finishRound(playerUUID, game, game.determineResult());
+                finishRound(playerUUID, game, game.determineResult(), holder);
                 playSound(player, Sound.ENTITY_WARDEN_HEARTBEAT, 0.25f, 1.0f);
                 return;
             }
@@ -189,11 +190,11 @@ public class BlackjackInventoryListener implements Listener {
                     player.sendMessage(BlackjackLite.instance.mini().deserialize("<red>Apuesta máxima excedida."));
                     return;
                 }
-                game.setBet(bet * 2);
+                holder.setBet(bet * 2);
                 game.hitPlayer();
                 game.dealerPlay();
                 playSound(player, Sound.ENTITY_WARDEN_HEARTBEAT, 0.25f, 1.0f);
-                finishRound(playerUUID, game, game.determineResult());
+                finishRound(playerUUID, game, game.determineResult(), holder);
                 return;
             }
 
@@ -228,7 +229,7 @@ public class BlackjackInventoryListener implements Listener {
                 if (BlackjackLite.instance.hasEnough(player, newBet)) {
                     BlackjackLite.withdraw(player, newBet);
 
-                    BlackjackGame newGame = new BlackjackGame(newBet);
+                    BlackjackGame newGame = new BlackjackGame();
                     newGame.startGame();
                     activeGames.put(playerUUID, newGame);
 
@@ -246,6 +247,18 @@ public class BlackjackInventoryListener implements Listener {
                  "minus_10", "minus_100", "minus_1000" -> {
                 Inventory inv = event.getInventory();
                 if (!(inv.getHolder() instanceof BlackjackInventoryHolder holder)) return;
+                int oldBet = holder.getBet();
+                int newBet = switch (id) {
+                    case "plus_10" -> oldBet + 10;
+                    case "plus_100" -> oldBet + 100;
+                    case "plus_1000" -> oldBet + 1000;
+                    case "minus_10" -> oldBet - 10;
+                    case "minus_100" -> oldBet - 100;
+                    case "minus_1000" -> oldBet - 1000;
+                    default -> oldBet;
+                };
+                holder.setBet(Math.max(100, Math.min(getMaxBet(), newBet)));
+                inv.setItem(22, menus.createItem(Material.PAPER, "<yellow>Apuesta actual: <green>" + holder.getBet(), "final_bet"));
                 handleBettingActions(event, holder, playerUUID);
             }
         }
@@ -253,8 +266,8 @@ public class BlackjackInventoryListener implements Listener {
 
     // ---- Helpers ---- //
 
-    private void finishRound(UUID uuid, @NotNull BlackjackGame game, @NotNull BlackjackGame.Result result) {
-        int bet = game.getBet();
+    private void finishRound(UUID uuid, @NotNull BlackjackGame game, @NotNull BlackjackGame.Result result, @NotNull BlackjackInventoryHolder holder) {
+        int bet = holder.getBet();
         int payout = switch (result) {
             case WIN -> bet * 2;
             case DRAW -> bet;
