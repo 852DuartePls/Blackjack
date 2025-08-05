@@ -77,7 +77,7 @@ public class BlackjackInventoryListener implements Listener {
 
         switch (holder.getMenuTypeid()) {
             case "initial_menu" -> handleBettingActions(event, holder, uuid);
-            case "game_menu" -> handleGameActions(event,  holder,  uuid);
+            case "game_menu" -> handleGameActions(event, holder, uuid);
             case "result_menu" -> handleResultActions(event, uuid);
         }
     }
@@ -95,34 +95,13 @@ public class BlackjackInventoryListener implements Listener {
         int currentBet = holder.getBet();
 
         switch (id) {
-            case "plus_10" -> {
-                holder.increaseBet(10, getMaxBet());
-                playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 0.4f, 1.5f);
-            }
-            case "plus_100" -> {
-                holder.increaseBet(100, getMaxBet());
-                playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 0.4f, 1.5f);
-            }
-            case "plus_1000" -> {
-                holder.increaseBet(1000, getMaxBet());
-                playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 0.4f, 1.5f);
-            }
-            case "minus_10" -> {
-                holder.decreaseBet(10);
-                playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 0.4f, 1.5f);
-            }
-            case "minus_100" -> {
-                holder.decreaseBet(100);
-                playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 0.4f, 1.5f);
-            }
-            case "minus_1000" -> {
-                holder.decreaseBet(1000);
-                playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 0.4f, 1.5f);
-            }
-            case "reset_bet" -> {
-                holder.setBet(100);
-                playSound(player, Sound.BLOCK_NOTE_BLOCK_HAT, 0.4f, 1.5f);
-            }
+            case "plus_10" -> adjustBet(event, holder, 10);
+            case "plus_100" -> adjustBet(event, holder, 100);
+            case "plus_1000" -> adjustBet(event, holder, 1000);
+            case "minus_10" -> adjustBet(event, holder, -10);
+            case "minus_100" -> adjustBet(event, holder, -100);
+            case "minus_1000" -> adjustBet(event, holder, -1000);
+            case "reset_bet" -> holder.setBet(100);
 
             case "start_game" -> {
                 if (!BlackjackLite.instance.hasEnough(player, currentBet)) {
@@ -247,19 +226,17 @@ public class BlackjackInventoryListener implements Listener {
                  "minus_10", "minus_100", "minus_1000" -> {
                 Inventory inv = event.getInventory();
                 if (!(inv.getHolder() instanceof BlackjackInventoryHolder holder)) return;
-                int oldBet = holder.getBet();
-                int newBet = switch (id) {
-                    case "plus_10" -> oldBet + 10;
-                    case "plus_100" -> oldBet + 100;
-                    case "plus_1000" -> oldBet + 1000;
-                    case "minus_10" -> oldBet - 10;
-                    case "minus_100" -> oldBet - 100;
-                    case "minus_1000" -> oldBet - 1000;
-                    default -> oldBet;
+                int delta = switch (id) {
+                    case "plus_10" -> 10;
+                    case "plus_100" -> 100;
+                    case "plus_1000" -> 1000;
+                    case "minus_10" -> -10;
+                    case "minus_100" -> -100;
+                    case "minus_1000" -> -1000;
+                    default -> 0;
                 };
-                holder.setBet(Math.max(100, Math.min(getMaxBet(), newBet)));
+                adjustBet(event, holder, delta);
                 inv.setItem(22, menus.createItem(Material.PAPER, "<yellow>Apuesta actual: <green>" + holder.getBet(), "final_bet"));
-                handleBettingActions(event, holder, playerUUID);
             }
         }
     }
@@ -358,6 +335,14 @@ public class BlackjackInventoryListener implements Listener {
 
     private int getMaxBet() {
         return 100_000;
+    }
+
+    private void adjustBet(@NotNull InventoryClickEvent event, @NotNull BlackjackInventoryHolder holder, int delta) {
+        int oldBet = holder.getBet();
+        int nextBet = oldBet + delta;
+        holder.setBet(Math.max(100, Math.min(getMaxBet(), nextBet)));
+        updateBetUI(event.getInventory(), holder.getBet());
+        playSound((Player) event.getWhoClicked(), Sound.BLOCK_NOTE_BLOCK_PLING, 0.4f, 1.5f);
     }
 
     public Map<UUID, BlackjackGame> getActiveGames() {
