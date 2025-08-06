@@ -101,7 +101,10 @@ public class BlackjackInventoryListener implements Listener {
             case "minus_10" -> adjustBet(event, holder, -10);
             case "minus_100" -> adjustBet(event, holder, -100);
             case "minus_1000" -> adjustBet(event, holder, -1000);
-            case "reset_bet" -> holder.setBet(100);
+            case "reset_bet" -> {
+                holder.setBet(100);
+                playSound((Player) event.getWhoClicked(), Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 0.6f, 1.2f);
+            }
 
             case "start_game" -> {
                 if (!BlackjackLite.instance.hasEnough(player, currentBet)) {
@@ -118,6 +121,7 @@ public class BlackjackInventoryListener implements Listener {
             }
             case "close" -> {
                 player.closeInventory();
+                playSound(player, Sound.ENTITY_VILLAGER_WORK_MASON, 0.4f, 1.5f);
                 return;
             }
             default -> {
@@ -220,7 +224,10 @@ public class BlackjackInventoryListener implements Listener {
                 }
             }
 
-            case "close" -> event.getWhoClicked().closeInventory();
+            case "close" -> {
+                event.getWhoClicked().closeInventory();
+                playSound(player, Sound.ENTITY_VILLAGER_WORK_MASON, 0.4f, 1.5f);
+            }
 
             case "plus_10", "plus_100", "plus_1000",
                  "minus_10", "minus_100", "minus_1000" -> {

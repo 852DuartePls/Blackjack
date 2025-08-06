@@ -43,19 +43,19 @@ public class BlackjackMenus {
 
         fillBorder(inv, Material.BLACK_STAINED_GLASS_PANE);
 
-        inv.setItem(22, createItem(Material.PAPER, "<yellow>Apuesta actual: <green>" + bet, "current_bet"));
+        inv.setItem(22, createItem(Material.PAPER, "<yellow><!i>ᴀᴘᴜᴇsᴛᴀ ᴀᴄᴛᴜᴀʟ: <green>" + bet, "current_bet"));
 
-        inv.setItem(11, createItem(Material.LIME_WOOL, "<green>+10", "plus_10"));
-        inv.setItem(20, createItem(Material.LIME_WOOL, "<green>+100", "plus_100"));
-        inv.setItem(29, createItem(Material.LIME_WOOL, "<green>+1 000", "plus_1000"));
+        inv.setItem(11, createItem(Material.LIME_WOOL, "<green><!i>+10", "plus_10"));
+        inv.setItem(20, createItem(Material.LIME_WOOL, "<green><!i>+100", "plus_100"));
+        inv.setItem(29, createItem(Material.LIME_WOOL, "<green><!i>+1000", "plus_1000"));
 
-        inv.setItem(15, createItem(Material.RED_WOOL, "<red>-10", "minus_10"));
-        inv.setItem(24, createItem(Material.RED_WOOL, "<red>-100", "minus_100"));
-        inv.setItem(33, createItem(Material.RED_WOOL, "<red>-1 000", "minus_1000"));
+        inv.setItem(33, createItem(Material.RED_WOOL, "<red><!i>-1000", "minus_1000"));
+        inv.setItem(24, createItem(Material.RED_WOOL, "<red><!i>-100", "minus_100"));
+        inv.setItem(15, createItem(Material.RED_WOOL, "<red><!i>-10", "minus_10"));
 
-        inv.setItem(18, createItem(Material.BARRIER, "<red>Reiniciar apuesta", "reset_bet"));
-        inv.setItem(26, createItem(Material.EMERALD_BLOCK, "<green>Iniciar Juego", "start_game"));
-        inv.setItem(44, createItem(Material.BUCKET, "<gray>Cerrar", "close"));
+        inv.setItem(18, createItem(Material.TNT, "<red><!i>ʀᴇɪɴɪᴄɪᴀʀ ᴀᴘᴜᴇsᴛᴀ", "reset_bet"));
+        inv.setItem(26, createItem(Material.NETHER_STAR, "<green><!i>ɪɴɪᴄɪᴀʀ ᴊᴜᴇɢᴏ", "start_game"));
+        inv.setItem(44, createItem(Material.BARRIER, "<gray><!i>ᴄᴇʀʀᴀʀ", "close"));
         inv.setItem(0, createItemWithLore(Material.BOOK, "<!i><red>===[ TUTORIAL ]===", "how_to_play", List.of(howToPlay)));
 
         return inv;
@@ -70,15 +70,15 @@ public class BlackjackMenus {
 
         int dealerStartSlots = 10;
         for (int i = 0; i < 7; i++) {
-            inv.setItem(dealerStartSlots + i, createItem(Material.YELLOW_STAINED_GLASS_PANE, "<gray>Espacio de Cartas del Dealer", "placeholder"));
+            inv.setItem(dealerStartSlots + i, createItem(Material.YELLOW_STAINED_GLASS_PANE, "<!i><gray>ʀᴀɴᴜʀᴀ ᴅᴇ ᴄᴀʀᴛᴀ", "placeholder"));
         }
 
         int playerStartSlots = 28;
         for (int i = 0; i < 7; i++) {
-            inv.setItem(playerStartSlots + i, createItem(Material.YELLOW_STAINED_GLASS_PANE, "<gray>Espacio de Cartas del Jugador", "placeholder"));
+            inv.setItem(playerStartSlots + i, createItem(Material.YELLOW_STAINED_GLASS_PANE, "<!i><gray>ʀᴀɴᴜʀᴀ ᴅᴇ ᴄᴀʀᴛᴀ", "placeholder"));
         }
 
-        inv.setItem(27, createItem(Material.OAK_SIGN, "<gold>Tu total: <white>" + game.getPlayerTotal(), "player_total"));
+        inv.setItem(27, createItem(Material.OAK_SIGN, "<!i><gold>ᴛᴜ ᴛᴏᴛᴀʟ: <white>" + game.getPlayerTotal(), "player_total"));
 
         String totalText;
         if (game.getDealerHand().size() == 2) {
@@ -87,19 +87,19 @@ public class BlackjackMenus {
         } else {
             totalText = String.valueOf(game.getDealerTotal());
         }
-        inv.setItem(9, createItem(Material.OAK_SIGN, "<gold>Total dealer: <white>" + totalText, "dealer_total"));
+        inv.setItem(9, createItem(Material.OAK_SIGN, "<!i><gold>ᴛᴏᴛᴀʟ ᴅᴇᴀʟᴇʀ: <white>" + totalText, "dealer_total"));
 
-        inv.setItem(35, createItem(Material.GOLD_NUGGET, "<yellow>Apuesta: <green>" + bet, "bet"));
+        inv.setItem(35, createItem(Material.GOLD_NUGGET, "<!i><yellow>ᴀᴘᴜᴇsᴛᴀ ᴛᴏᴛᴀʟ: <green>" + bet, "bet"));
 
-        inv.setItem(20, createItem(Material.GREEN_WOOL, "<green>Pedir Carta", "hit"));
-        inv.setItem(22, createItem(Material.RED_WOOL, "<red>Plantarse", "stand"));
+        inv.setItem(20, createItem(Material.GREEN_WOOL, "<!i><green>ᴘᴇᴅɪʀ ᴄᴀʀᴛᴀ", "hit"));
+        inv.setItem(22, createItem(Material.RED_WOOL, "<!i><red>ᴘʟᴀɴᴛᴀʀsᴇ", "stand"));
 
-        Material boolMat = game.canDoubleDown() ? Material.PURPLE_WOOL : Material.GRAY_STAINED_GLASS_PANE;
-        String doubleDownName = game.canDoubleDown() ? ("<blue>Doblar la apuesta") : ("<gray>No disponible");
+        Material boolMat = game.canDoubleDown() ? Material.PURPLE_WOOL : Material.LIGHT_GRAY_WOOL;
+        String doubleDownName = game.canDoubleDown() ? ("<!i><blue>ᴅᴏʙʟᴀʀ ʟᴀ ᴀᴘᴜᴇsᴛᴀ") : ("<gray>No disponible");
         inv.setItem(24, createItem(boolMat, doubleDownName, "double_down"));
 
-        inv.setItem(17, createItem(Material.BOOK, "<gray>Cartas restantes: <white>" + game.getRemainingDeckSize(), "deck_left"));
-        inv.setItem(44, createItem(Material.BUCKET, "<gray>Cerrar", "close"));
+        inv.setItem(17, createItem(Material.BOOK, "<!i><gray>ᴄᴀʀᴛᴀs ʀᴇsᴛᴀɴᴛᴇs: <white>" + game.getRemainingDeckSize(), "deck_left"));
+        inv.setItem(44, createItem(Material.BARRIER, "<!i><gray>ᴄᴇʀʀᴀʀ", "close"));
 
         /* ---- DEALER CARDS (row 2, slots 10-16 → max 7 cards) ---- */
         List<BlackjackGame.Card> dealerCards = game.getDealerHand();
@@ -107,7 +107,7 @@ public class BlackjackMenus {
         for (int i = 0; i < dealerCards.size() && i < dealerCardSlots.length; i++) {
             int slot = dealerCardSlots[i];
             if (i == 1 && dealerCards.size() == 2) {
-                inv.setItem(slot, createItem(Material.MAP, "<red>Carta oculta", "hidden_card"));
+                inv.setItem(slot, createItem(Material.MAP, "<!i><red>ᴄᴀʀᴛᴀ ᴏᴄᴜʟᴛᴀ", "hidden_card"));
             } else {
                 inv.setItem(slot, createCardItem(dealerCards.get(i)));
             }
@@ -153,14 +153,14 @@ public class BlackjackMenus {
         }
 
         if (totalEarnings > 0) {
-            formattedTotalEarnings =  BlackjackLite.instance.mini().deserialize("<green>Ganancias Totales: +" + totalEarnings + "$");
+            formattedTotalEarnings = BlackjackLite.instance.mini().deserialize("<!i><green>ɢᴀɴᴀɴᴄɪᴀs ᴛᴏᴛᴀʟᴇs: +" + totalEarnings + "$");
         } else if (totalEarnings < 0) {
-            formattedTotalEarnings = BlackjackLite.instance.mini().deserialize("<red>Ganancias Totales: " + totalEarnings + "$");
+            formattedTotalEarnings = BlackjackLite.instance.mini().deserialize("<!i><red>ɢᴀɴᴀɴᴄɪᴀs ᴛᴏᴛᴀʟᴇs: " + totalEarnings + "$");
         } else {
-            formattedTotalEarnings = BlackjackLite.instance.mini().deserialize("<yellow>Ganancias Totales: 0$");
+            formattedTotalEarnings = BlackjackLite.instance.mini().deserialize("<!i><yellow>ɢᴀɴᴀɴᴄɪᴀs ᴛᴏᴛᴀʟᴇs: 0$");
         }
 
-        ItemStack winningsItem = createItem(Material.GOLD_INGOT, "<yellow>Ganancias: " + formattedWinnings, "winnings");
+        ItemStack winningsItem = createItem(Material.GOLD_INGOT, "<!i><yellow>ɢᴀɴᴀɴᴄɪᴀs: " + formattedWinnings, "winnings");
         ItemMeta meta = winningsItem.getItemMeta();
         assert meta != null;
 
@@ -180,27 +180,28 @@ public class BlackjackMenus {
 
         int dealerStartSlots = 10;
         for (int i = 0; i < 7; i++) {
-            inv.setItem(dealerStartSlots + i, createItem(Material.YELLOW_STAINED_GLASS_PANE, "<gray>Espacio vacio del Dealer", "placeholder"));
+            inv.setItem(dealerStartSlots + i, createItem(Material.YELLOW_STAINED_GLASS_PANE, "<!i><gray>ʀᴀɴᴜʀᴀ ᴅᴇ ᴄᴀʀᴛᴀ", "placeholder"));
         }
 
         int playerStartSlots = 28;
         for (int i = 0; i < 7; i++) {
-            inv.setItem(playerStartSlots + i, createItem(Material.YELLOW_STAINED_GLASS_PANE, "<gray>Espacio vacio del Jugador", "placeholder"));
+            inv.setItem(playerStartSlots + i, createItem(Material.YELLOW_STAINED_GLASS_PANE, "<!i><gray>ʀᴀɴᴜʀᴀ ᴅᴇ ᴄᴀʀᴛᴀ", "placeholder"));
         }
 
-        inv.setItem(27, createItem(Material.OAK_SIGN, "<gold>Tu total: <white>" + game.getPlayerTotal(), "player_total"));
-        inv.setItem(9, createItem(Material.OAK_SIGN, "<gold>Total dealer: <white>" + game.getDealerTotal(), "dealer_total"));
+        inv.setItem(27, createItem(Material.OAK_SIGN, "<!i><gold>ᴛᴜ ᴛᴏᴛᴀʟ: <white>" + game.getPlayerTotal(), "player_total"));
+        inv.setItem(9, createItem(Material.OAK_SIGN, "<!i><gold>ᴛᴏᴛᴀʟ ᴅᴇᴀʟᴇʀ: <white>" + game.getDealerTotal(), "dealer_total"));
 
-        inv.setItem(22, createItem(Material.GOLD_NUGGET, "<yellow>Apuesta Final: <green>" + bet, "final_bet"));
+        inv.setItem(22, createItem(Material.GOLD_NUGGET, "<!i><yellow>ᴀᴘᴜᴇsᴛᴀ ғɪɴᴀʟ: <green>" + bet, "final_bet"));
         inv.setItem(4, winningsItem);
-        inv.setItem(36, createItem(Material.EMERALD_BLOCK, "<green>Jugar Otra Vez", "play_again"));
-        inv.setItem(44, createItem(Material.BUCKET, "<red>Cerrar", "close"));
-        inv.setItem(19, createItem(Material.LIME_WOOL, "+10", "plus_10"));
-        inv.setItem(20, createItem(Material.LIME_WOOL, "+100", "plus_100"));
-        inv.setItem(21, createItem(Material.LIME_WOOL, "+1 000", "plus_1000"));
-        inv.setItem(23, createItem(Material.RED_WOOL, "-10", "minus_10"));
-        inv.setItem(24, createItem(Material.RED_WOOL, "-100", "minus_100"));
-        inv.setItem(25, createItem(Material.RED_WOOL, "-1 000", "minus_1000"));
+        inv.setItem(36, createItem(Material.EMERALD_BLOCK, "<!i><green>ᴊᴜɢᴀʀ ᴏᴛʀᴀ ᴠᴇᴢ", "play_again"));
+        inv.setItem(44, createItem(Material.BARRIER, "<!i><red>ᴄᴇʀʀᴀʀ", "close"));
+        inv.setItem(21, createItem(Material.LIME_WOOL, "<!i><green>+10", "plus_10"));
+        inv.setItem(20, createItem(Material.LIME_WOOL, "<!i><green>+100", "plus_100"));
+        inv.setItem(19, createItem(Material.LIME_WOOL, "<!i><green>+1 000", "plus_1000"));
+
+        inv.setItem(23, createItem(Material.RED_WOOL, "<!i><red>-10", "minus_10"));
+        inv.setItem(24, createItem(Material.RED_WOOL, "<!i><red>-100", "minus_100"));
+        inv.setItem(25, createItem(Material.RED_WOOL, "<!i><red>-1 000", "minus_1000"));
 
         /* ---- DEALER CARDS (row 2, slots 10-16 → max 7 cards) ---- */
         List<BlackjackGame.Card> dealerCards = game.getDealerHand();
